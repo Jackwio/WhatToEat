@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"><!doctype html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>編輯會員資料(使用者)</title>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        a {
+            text-decoration: none;
+        }
+
+        .navbar-expand-lg {
+            background-color: orange;
+        }
+
+        /* 讓加入購物車按鈕呈現橘色 */
+        .btn-danger {
+            background-color: orange;
+            color: black; /* 如果需要調整文字顏色，可以根據需要修改 */
+        }
+
+        /* 更改 More info 連結文字為黑色 */
+        .nav-item a[href="#"] {
+            color: black;
+        }
+
+        /* 更改類別連結文字為黑色 */
+        .nav-item span a {
+            color: black;
+        }
+
+        .modal-body a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .modal-body a:hover {
+            color: orange;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg" bg-body-tertiary>
+    <div class="container-fluid">
+        <button class="btn" style="background-color:orange" type="button" data-bs-toggle="modal"
+                data-bs-target="#myModal"><a
+                class="navbar-brand" href="#"><i class="bi bi-list" style="font-size: 30px;"></i></a>
+        </button>
+        <a class="navbar-brand" th:href="@{/main}">
+            <h2>WhatToEat</h2>
+        </a>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
+            <li class="nav-item">
+                <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen" style="width: 400px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td rowspan="2"><img th:if="${session.currentUser!=null}"
+                                                                 th:src="@{${session.currentUser.memPhoto}}"
+                                                                 style="width: 170px;height: 200px"
+                                                                 class="rounded">
+                                                <i th:if="${session.currentUser==null}" class="bi bi-person-circle"
+                                                   style="font-size: 6em"></i>
+                                            </td>
+                                            <td colspan="4"
+                                                style="font-size: 30px;vertical-align: middle; text-align: center;padding-top:25px"
+                                                th:if="${session.currentUser!=null}"
+                                                th:text="${session.currentUser.memName}">
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" th:if="${session.currentUser!=null}"
+                                                style="vertical-align: middle; text-align: center;padding-left:10px"><a
+                                                    th:href="@{/goToProfile}">管理帳戶</a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div style="margin-bottom: 20px;" th:if="${session.currentUser!=null}"><a th:href="@{/getMemberOrder}"
+                                                                     style="font-size: 25px;">訂單</a>
+                                </div>
+                                <div style="margin-bottom: 20px;" th:if="${session.currentUser!=null}"><a th:href="@{/showCollect}" style="font-size: 25px;">收藏</a></div>
+                                <div th:if="${session.currentUser!=null}" style="margin-bottom: 20px;"><a
+                                        th:href="@{/logOut}"
+                                        style="font-size: 25px;">登出</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
+                <li class="nav-item">
+                    <div class="dropdown" style="margin-right: 70px;">
+                        <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                data-bs-auto-close="outside" style="margin-left:5px">
+                            <h3 id="cartNumber" style="margin-top: 4px;"><i class="bi bi-cart"
+                                                                            th:fragment="cartNumber"></i><span
+                                    class="badge text-bg-danger" th:text="${session.cartItems.size()}"
+                                    th:fragment="cartNumber">5</span></h3>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" id="cartItemBlock">
+                            <li th:if="${session.cartItems.size()==0 || session.cartItems==null}">
+                                目前尚未有商品
+                            </li>
+                            <li th:if="${session.cartItems.size()==0 || session.cartItems==null}"
+                                th:each="item : ${session.cartItems}" th:fragment="cartItemBlock">
+                                <a id="cartItemList" class="dropdown-item cartStyle" href="#">
+                                    <div class="d-flex justify-content-center">
+                                            <span th:text="${item.foodId.menuFoodName}"
+                                                  style="margin-top: 9px;color:blueviolet;">品名</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                            <button type="button" class="btn btn-light"
+                                                    data-operation="-1"
+                                                    th:data-menuid="${item.foodId.menuFoodId}"
+                                                    th:onclick="|editItem(this.getAttribute('data-operation'),this.getAttribute('data-menuid'),event)|">
+                                                <i
+                                                        class="bi bi-dash-circle-fill"
+                                                        style="color: black;font-size: 20px;"></i></button>
+                                            <button type="button" class="btn btn-light"><span
+                                                    style="color: black;" th:text="${item.foodNum}">1</span></button>
+                                            <button type="button" class="btn btn-light"><i
+                                                    class="bi bi-plus-circle-fill edit-item"
+                                                    style="color: black;font-size: 20px;" data-operation="1"
+                                                    th:data-menuid="${item.foodId.menuFoodId}"
+                                                    th:onclick="|editItem(this.getAttribute('data-operation'),this.getAttribute('data-menuid'),event)|"></i>
+                                            </button>
+                                        </div>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span style="margin-top: 9px;color:blueviolet;">總額為<span
+                                                th:text="${item.foodNum*item.foodId.menuFoodPrice}">100</span>
+                                            </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button style="margin-top: 9px;" class="btn btn-danger"
+                                                th:data-menuid="${item.foodId.menuFoodId}"
+                                                th:onclick="|deleteItem(this.getAttribute('data-menuid'))|">刪除
+                                        </button>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <!-- Add more items as needed -->
+                            <li class="text-center" style="background-color: orange;" th:fragment="cartItemBlock">
+                                <button type="button" class="btn"
+                                        th:data-cartItem="${session.cartItems.size()}" onclick="goToPay(this)">
+                                    前往付款
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item" th:if="${session.currentUser==null}">
+                    <a th:href="@{/loginUser}" class="nav-link" style="color: rgb(0, 0, 0);margin-top: 8px;">login</a>
+                </li>
+                <li class="nav-item" th:if="${session.currentUser==null}">
+                    <a class="nav-link" style="color: rgb(0, 0, 0);margin-top: 8px;" th:href="@{/registerUser}">sign
+                        up</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br/><br/><br/><br/><br/><br/>
+<div class="container text-center" style="max-width: 68%">
+    <div class="col-md-3 d-flex align-items-center">
+        <div class="rounded-circle overflow-hidden mx-auto" style="width: 100px; height: 100px;">
+            <img th:src="${session.currentUser.memPhoto}" class="w-100 h-100" alt="Profile Image">
+        </div>
+    </div>
+    <div th:text="${profileMessage}" style="color: red;font-size: 25px"></div>
+    <span style="font-size: 50px;margin-left: 3px;">會員資料</span><br/><br/><br/>
+    <div class="input-group flex-nowrap offset-md-3">
+        <span class="input-group-text" id="addon-wrapping">姓名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <input id="nameInput" type="text" class="form-control" placeholder="請輸入名字" style="max-width:40%"
+               th:value="${session.currentUser.memName}">
+    </div>
+    <br/>
+    <div class="input-group flex-nowrap col-md-3 offset-md-3">
+        <span class="input-group-text" id="addon-wrapping1">email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <input id="emailInput" type="text" class="form-control" disabled placeholder="請輸入email" style="max-width:40%"
+               th:value="${session.currentUser.memEmail}">
+    </div>
+    <br/>
+    <div class="input-group flex-nowrap offset-md-3">
+        <span class="input-group-text" id="addon-wrapping2">手機&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <input id="phoneInput" type="text" class="form-control" placeholder="請輸入手機" style="max-width:40%"
+               th:value="${session.currentUser.memPhoneNum}">
+    </div>
+    <br/>
+    <button id="passwordBtn" class="btn btn-primary btn-lg" onclick="showPasswordBlock()">修改密碼</button>
+    <br/><br/><br/>
+
+    <div style="display: none" id="passwordBlock">
+        <span style="font-size: 50px;margin-left: 3px;">修改密碼</span><br/><br/><br/>
+        <div class="input-group flex-nowrap offset-md-3">
+            <span class="input-group-text" id="addon-wrapping3">密碼&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <input type="text" class="form-control" placeholder="請輸入舊密碼" style="max-width:40%"
+                   th:value="${password.password}">
+        </div>
+        <br/>
+        <div class="input-group flex-nowrap offset-md-3">
+            <span class="input-group-text" id="addon-wrapping4">新密碼&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <input id="passwordInput" type="text" class="form-control" placeholder="請輸入新密碼" style="max-width:40%">
+        </div>
+        <br/>
+        <div class="input-group flex-nowrap offset-md-3">
+            <span class="input-group-text" id="addon-wrapping5">確認密碼</span>
+            <input id="confirmPasswordInput" type="text" class="form-control" placeholder="請輸入確認密碼"
+                   style="max-width:40%">
+        </div>
+        <br/>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <button id="editBtn2" class="btn btn-primary btn-lg" style="margin-right: 20px;">取消</button>
+            <button id="editBtn" class="btn btn-primary btn-lg" onclick="confirmChange()">確認</button>
+            <br/><br/><br/>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+<script type="text/javascript">
+    function showPasswordBlock() {
+        $('#passwordBlock').toggle();
+    }
+
+    function confirmChange() {
+
+        var memEmail = $('#emailInput').val()
+        var memName = $('#nameInput').val()
+        var memPhoneNum = $('#phoneInput').val()
+        var password = $('#passwordInput').val()
+        var confirmPassword = $('#confirmPasswordInput').val()
+        if (password != confirmPassword) {
+            alert('密碼和確認密碼不一樣，更改失敗')
+            return false
+        }
+
+        const formData = new FormData();
+        formData.append('memEmail', memEmail);
+        formData.append('memName', memName);
+        formData.append('memPhoneNum', memPhoneNum);
+        formData.append('password', password);
+
+        fetch('/editMemberInfo', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                alert(data)
+                window.location.href = 'http://localhost:8080/goToProfile'
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+</script>
+</body>
+
+</html>

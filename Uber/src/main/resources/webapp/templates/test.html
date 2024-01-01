@@ -1,0 +1,249 @@
+<!-- 電影新增頁面 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FinalProject_group7</title>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            /* 設定高度為視窗的100% */
+        }
+
+        .movie-container {
+            display: flex;
+            max-width: 800px;
+            /* 根據需要設定最大寬度 */
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* 添加陰影效果 */
+            border-radius: 10px;
+            /* 添加圓角 */
+        }
+
+        .movie-image {
+            flex: 1;
+            border-radius: 10px 0 0 10px;
+            /* 左邊的圓角 */
+            overflow: hidden;
+        }
+
+        .movie-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px 0 0 10px;
+            /* 左邊的圓角 */
+        }
+
+        .movie-details {
+            flex: 2;
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            /* 右邊的圓角 */
+        }
+
+        .movie-details h2 {
+            margin-bottom: 20px;
+        }
+
+        .movie-details p {
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #c7d8b6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #f0f0f0;
+            /* 使用淺灰色背景 */
+            color: black;
+            /* 使用黑色文字顏色 */
+        }
+    </style>
+    <script src="statics/js/jquery-3.4.1.min.js"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid" style="max-width: 90%">
+        <!-- 網站標題 -->
+        <a class="navbar-brand" href="#">沉浸式精緻電影院</a>
+
+        <!-- navbar的切換按鈕，用於小屏幕設備 -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- navbar的折疊區域 -->
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <!-- 首頁連結 -->
+                <a class="nav-link active" aria-current="page" href="manager_index.html">首頁</a>
+
+                <!-- 會員管理連結 -->
+                <a class="nav-link" href="mgr_member_browse.html">會員管理</a>
+
+                <!-- 電影管理連結 -->
+                <a class="nav-link" href="mgr_movie_browse.html">電影管理</a>
+
+                <!-- 包廂設置連結 -->
+                <a class="nav-link" href="mgr_room_browse.html">包廂設置</a>
+
+                <!-- 餐點更動連結 -->
+                <a class="nav-link" href="mgr_meal_browse.html">餐點更動</a>
+
+            </div>
+            <!-- 新增右側的下拉式選單 -->
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <!-- 在這裡加入你的人物圖示 -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                            <path fill-rule="evenodd"
+                                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                        </svg>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <!-- 下拉式選單中的選項 -->
+                        <a class="dropdown-item" href="index.html">登出</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<p class="text-muted text-center mb-4 fw-bold" style="font-size: 1.2rem; margin-top: 1.5rem;">
+    親愛的管理員您好，您可以在此新增電影，請您確保每一欄都已填寫。</p>
+
+
+
+<div class="container mt-1">
+    <form method="post" enctype="multipart/form-data" onsubmit="return confirmAdd(event)">
+        <div class="row mb-3">
+            <!-- 電影名字 -->
+            <div class="col">
+                <label for="movieName" class="form-label">電影名稱</label>
+                <input type="text" class="form-control" id="movieName" name="movieName" required>
+            </div>
+
+            <!-- 電影片長 -->
+            <div class="col">
+                <label for="duration" class="form-label">片長</label>
+                <input type="text" class="form-control" id="duration" name="duration" required>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <!-- 電影簡介 -->
+            <div class="col">
+                <label for="description" class="form-label">簡介</label>
+                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <!-- 電影分類 -->
+            <div class="col">
+                <label for="category" class="form-label">分類</label>
+                <select class="form-select" id="category" name="category" required>
+                    <option value="0">其他</option>
+                    <option value="1">愛情</option>
+                    <option value="2">劇情</option>
+                    <option value="3">動作</option>
+                    <option value="4">驚悚</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <!-- 電影圖片上傳 -->
+            <div class="col">
+                <label for="image" class="form-label">圖片</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+            </div>
+        </div>
+
+        <!-- 確認添加按鈕 -->
+        <button type="submit" class="btn btn-primary">確認添加</button>
+    </form>
+</div>
+
+
+
+
+<script>
+    // 確認添加按鈕事件
+    function confirmAdd(event) {
+        event.preventDefault()
+        // 讀取輸入值
+        var movieName = document.getElementById('movieName').value;
+        var duration = parseInt(document.getElementById('duration').value, 10);  // 轉換為整數
+        var description = document.getElementById('description').value;
+        var category = parseInt(document.getElementById('category').value, 10);  // 轉換為整數
+        var imageInput = document.getElementById('image');
+        const image = imageInput.files[0];  // 取得上傳的檔案
+
+        // 檢查所有欄位沒空值
+        if (!movieName || isNaN(duration) || !description || isNaN(category) || !image) {
+            alert('請填寫所有必填欄位');
+            return;
+        }
+
+        // 使用 FormData 來處理上傳的檔案
+        const formData = new FormData();
+        formData.append('movieName', movieName);
+        formData.append('duration', duration);
+        formData.append('description', description);
+        formData.append('category', category);
+        formData.append('image', image);
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+
+        // 使用 AJAX 向後端發送 POST 請求
+        $.ajax({
+            type: 'POST',
+            url: '/test',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                // 處理後端回傳的資料，這裡可以根據需要進行操作
+                alert(response.message);
+                // 可以根據需求進行頁面跳轉等操作
+                // window.location.href = 'http://localhost:8080/test';
+            },
+            error: function (error) {
+                // 處理錯誤，這裡可以根據需要進行操作
+                alert('電影添加失敗！');
+            }
+        });
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

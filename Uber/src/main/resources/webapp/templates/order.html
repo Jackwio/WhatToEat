@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        td,
+        th {
+            text-align: center;
+            padding: 12px;
+        }
+        /* Custom styles to remove outer border and align on the same horizontal line */
+        .input-group {
+            border: none;
+        }
+
+        .input-group-text {
+            border-right: none;
+        }
+
+        .form-control {
+            border-left: none;
+            max-width: 60%; /* Adjust the width as needed */
+        }
+
+        /* 把div內全部垂直置中 */
+        .mainContent {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .navbar-expand-lg {
+            background-color: orange;
+        }
+
+        .btn-secondary {
+            background-color: orange;
+            color: black; /* 如果需要調整文字顏色，可以根據需要修改 */
+        }
+
+        .navbar-toggler-icon {
+            background-color: orange;
+        }
+
+        .navbar-nav a {
+            color: rgb(0, 0, 0);
+        }
+
+        #moneyConstraint .btn,
+        #foodConstraint .btn {
+            color: rgb(0, 0, 0);
+        }
+
+        .page-link {
+            color: rgb(0, 0, 0);
+        }
+
+        #contraint .btn {
+            background-color: orange;
+            color: black; /* 如果需要調整文字顏色，可以根據需要修改 */
+        }
+
+        .btn-outline-success {
+            border-color: black;
+            color: black; /* 如果需要調整文字顏色，可以根據需要修改 */
+        }
+
+        .container.row span a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .container.row span a:hover {
+            text-decoration: underline;
+        }
+
+        .hamburger-icon {
+            font-size: 30px;
+            background-color: orange;
+        }
+        .btn{
+            background-color:orange;
+            color:black;
+        }
+        .modal-body a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .modal-body a:hover {
+            color: orange;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        /* 把div內全部垂直置中 */
+        .mainContent {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* .container{
+            border: 1px solid;
+        } */
+        #moneyConstraint{
+            margin-left: 10px;
+        }
+        /* 把原本的 background-color 改成橘色 */
+        .navbar-expand-lg  {
+            background-color: orange;
+        }
+
+        /* 把 .btn-secondary 的 background-color 和 color 改成橘色 */
+        .btn-secondary {
+            background-color: orange;
+            color: black; /* 如果需要調整文字顏色，可以根據需要修改 */
+        }
+
+        /* 把 .navbar-toggler-icon 的 background-color 改成橘色 */
+        .navbar-toggler-icon {
+            background-color: orange;
+        }
+
+        /* 把 .navbar-nav a 的文字顏色改成橘色 */
+        .navbar-nav a {
+            color: rgb(0, 0, 0);
+        }
+
+        /* 把 #moneyConstraint 和 #foodConstraint 下拉按鈕的文字顏色改成橘色 */
+        #moneyConstraint .btn, #foodConstraint .btn {
+            color: rgb(0, 0, 0);
+        }
+
+        /* 把 .page-link 的文字顏色改成橘色 */
+        .page-link {
+            color: rgb(0, 0, 0);
+        }
+
+        /* 應用橘色樣式到 #contraint div 內的 .btn */
+        #contraint .btn {
+            background-color: orange;
+            color: black; /* 如果需要調整文字顏色，可以根據需要修改 */
+        }
+
+        /* 把 search 按鈕的外框改成黑色 */
+        .btn-outline-success {
+            border-color: black;
+            color: black; /* 如果需要調整文字顏色，可以根據需要修改 */
+        }
+
+        /* 修改底部分類的文字和底線顏色 */
+        .container.row span a {
+            color: black;
+            text-decoration: none;
+        }
+
+        /* 修改底部分類 hover 狀態的底線顏色 */
+        .container.row span a:hover {
+            text-decoration: underline;
+        }
+        .caption{
+            font-size:larger;
+            font-weight: 600;
+            color: black;
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg" bg-body-tertiary>
+    <div class="container-fluid">
+        <button class="btn" style="background-color:orange" type="button" data-bs-toggle="modal"
+                data-bs-target="#myModal"><a
+                class="navbar-brand" href="#"><i class="bi bi-list" style="font-size: 30px;"></i></a>
+        </button>
+        <a class="navbar-brand" th:href="@{/main}">
+            <h2>WhatToEat</h2>
+        </a>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
+            <li class="nav-item">
+                <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen" style="width: 400px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td rowspan="2"><img th:if="${session.currentUser!=null}"
+                                                                 th:src="@{${session.currentUser.memPhoto}}"
+                                                                 style="width: 170px;height: 200px"
+                                                                 class="rounded">
+                                                <i th:if="${session.currentUser==null}" class="bi bi-person-circle"
+                                                   style="font-size: 6em"></i>
+                                            </td>
+                                            <td colspan="4"
+                                                style="font-size: 30px;vertical-align: middle; text-align: center;padding-top:25px"
+                                                th:if="${session.currentUser!=null}"
+                                                th:text="${session.currentUser.memName}">
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" th:if="${session.currentUser!=null}"
+                                                style="vertical-align: middle; text-align: center;padding-left:10px"><a
+                                                    th:href="@{/goToProfile}">管理帳戶</a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div style="margin-bottom: 20px;" th:if="${session.currentUser!=null}"><a
+                                        th:href="@{/getMemberOrder}" style="font-size: 25px;">訂單</a></div>
+                                <div style="margin-bottom: 20px;" th:if="${session.currentUser!=null}"><a
+                                        th:href="@{/showCollect}" style="font-size: 25px;">收藏</a></div>
+                                <div th:if="${session.currentUser!=null}" style="margin-bottom: 20px;"><a
+                                        th:href="@{/logOut}"
+                                        style="font-size: 25px;">登出</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
+                <li class="nav-item">
+                    <div class="dropdown" style="margin-right: 70px;">
+                        <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                data-bs-auto-close="outside" style="margin-left:5px">
+                            <h3 id="cartNumber" style="margin-top: 4px;"><i class="bi bi-cart"
+                                                                            th:fragment="cartNumber"></i><span
+                                    class="badge text-bg-danger" th:text="${session.cartItems.size()}"
+                                    th:fragment="cartNumber">5</span></h3>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" id="cartItemBlock">
+                            <li th:if="${session.cartItems.size()==0 || session.cartItems==null}">
+                                目前尚未有商品
+                            </li>
+                            <li th:each="item : ${session.cartItems}" th:fragment="cartItemBlock">
+                                <a id="cartItemList" class="dropdown-item cartStyle" href="#">
+                                    <div class="d-flex justify-content-center">
+                                            <span th:text="${item.foodId.menuFoodName}"
+                                                  style="margin-top: 9px;color:blueviolet;">品名</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                            <button type="button" class="btn btn-light"
+                                                    data-operation="-1"
+                                                    th:data-menuid="${item.foodId.menuFoodId}"
+                                                    th:onclick="|editItem(this.getAttribute('data-operation'),this.getAttribute('data-menuid'),event)|">
+                                                <i
+                                                        class="bi bi-dash-circle-fill"
+                                                        style="color: black;font-size: 20px;"></i></button>
+                                            <button type="button" class="btn btn-light"><span
+                                                    style="color: black;" th:text="${item.foodNum}">1</span></button>
+                                            <button type="button" class="btn btn-light"><i
+                                                    class="bi bi-plus-circle-fill edit-item"
+                                                    style="color: black;font-size: 20px;" data-operation="1"
+                                                    th:data-menuid="${item.foodId.menuFoodId}"
+                                                    th:onclick="|editItem(this.getAttribute('data-operation'),this.getAttribute('data-menuid'),event)|"></i>
+                                            </button>
+                                        </div>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span style="margin-top: 9px;color:blueviolet;">總額為<span th:text="${item.foodNum*item.foodId.menuFoodPrice}">100</span>
+                                            </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button style="margin-top: 9px;" class="btn btn-danger"  th:data-menuid="${item.foodId.menuFoodId}"
+                                                th:onclick="|deleteItem(this.getAttribute('data-menuid'))|">刪除</button>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <!-- Add more items as needed -->
+                            <li class="text-center" style="background-color: orange;" th:fragment="cartItemBlock">
+                                <button type="button" class="btn"
+                                        th:data-cartItem="${session.cartItems.size()}" onclick="goToPay(this)">
+                                    前往付款
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item" th:if="${session.currentUser==null}">
+                    <a th:href="@{/loginUser}" class="nav-link" style="color: rgb(0, 0, 0);margin-top: 8px;">login</a>
+                </li>
+                <li class="nav-item" th:if="${session.currentUser==null}">
+                    <a class="nav-link" style="color: rgb(0, 0, 0);margin-top: 8px;" th:href="@{/registerUser}">sign
+                        up</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<table class="table table-striped table table-sm table caption-top table table-hover">
+    <caption class="caption">&nbsp;&nbsp;訂餐紀錄</br></br></caption>
+    <thead>
+    <tr>
+        <th scope="col">日期</th>
+        <th scope="col">餐廳</th>
+        <th scope="col">訂單編號</th>
+        <th scope="col">訂餐內容</th>
+        <th scope="col">總價</th>
+        <th scope="col">處理進度</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${ordersMember}">
+        <td th:text="${order.orderDateTime}"></td>
+        <td th:text="${order.rest.restName}"></td>
+        <th scope="row" th:text="${order.orderId}"></th>
+        <td>
+            <div th:each="item :${order.orderItem}">
+                <span th:text="${item.foodId.menuFoodName+' * '+item.foodNum}"></span>
+            </div>
+        </td>
+        <td th:text="${order.orderTotal}"></td>
+        <td th:text="${order.orderState}"></td>
+
+    </tr>
+    </tbody>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+            crossorigin="anonymous"></script>
+</table>
+<script type="text/javascript">
+    function goToPay(button) {
+        var quantity=button.getAttribute("data-cartItem")
+        if(parseInt(quantity)==0){
+            alert("請先加入商品到購物在進行付款")
+            return
+        }
+        window.location.href = 'http://localhost:8080/goToPay'
+    }
+</script>
+</body>
+</html>

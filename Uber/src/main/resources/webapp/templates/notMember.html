@@ -1,0 +1,45 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            background-image: url('../static/images/請先註冊！ (無字).jpg'); /* Add the path to your background image */
+            background-size: cover; /* Ensure the image covers the entire background */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+        }
+        h2{
+            margin-top: 225px;
+            margin-left: 500px;
+        }
+        /* 未访问前的颜色 */
+        a:link {
+            color: black;
+        }
+
+        /* 鼠标悬停时的颜色 */
+        a:hover {
+            font-weight: 1000px;
+        }
+        /* 被点击后的颜色 */
+        a:active {
+            color: black
+        }
+
+        /* 已访问过的颜色 */
+        a:visited {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;餓了?</br>請先<a th:href="@{/loginUser}">登入</a>/<a th:href="@{/registerUser}">註冊</a></h2>
+</body>
+</html>

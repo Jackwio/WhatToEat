@@ -1,0 +1,33 @@
+server:
+  servlet:
+    register-default-servlet: true
+
+spring:
+  mvc:
+    servlet:
+      load-on-startup: 1
+  thymeleaf:
+    prefix: classpath:/webapp/templates/
+    suffix: .html
+    cache: false
+  web:
+    resources:
+      static-locations: classpath:/webapp/
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      username: root
+      password: "az98198506"
+      url: jdbc:mysql://localhost:3306/mydb
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
+mybatis-plus:
+  global-config:
+    db-config:
+      table-prefix: tbl_
+      id-type: assign_id
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

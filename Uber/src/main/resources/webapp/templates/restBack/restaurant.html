@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .navbar {
+            background-color: orange;
+            padding-top: 1px;
+            padding-bottom: 1px;
+        }
+
+        .navbar-text {
+            vertical-align: bottom;
+            font-weight: 600;
+        }
+
+        #navbarSupportedContent {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mainContent {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            width: 500px;
+        }
+
+        .btn {
+            background-color: orange;
+            color: black;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background-color: orange;
+            color: black;
+            font-weight: 700;
+            box-shadow: 0 4px 8px rgba(255, 166, 0, 0.7);
+        }
+
+        .modal-body a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .modal-body a:hover {
+            color: orange;
+            text-decoration: none;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="container-fluid">
+        <button class="btn btn-light" type="button" data-bs-toggle="modal" data-bs-target="#myModal"> <a
+                class="navbar-brand" href="#"><i class="bi bi-list" style="font-size: 30px;"></i></a>
+        </button>
+        <a class="navbar-brand" th:href="@{/goToRestBack}">
+            <h2>WhatToEat</h2>
+        </a>
+        <div id="navbarSupportedContent">
+            <span th:text="${session.currentRestaurant.restName}" class="navbar-text">永和豆漿大王您好!</span>
+        </div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
+            <li class="nav-item">
+                <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen" style="width:400px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel"></h4>
+                            </div>
+                            <div class="modal-body">
+                                <div style="margin-bottom: 20px;"><a th:href="@{/goToRestBack}" style="font-size: 25px;">首頁</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/goToRest}" style="font-size: 25px;">餐廳門市</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/goToMenuOfRest}" style="font-size: 25px;">菜單</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/getComment}" style="font-size: 25px;">評論</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/getOrderReceived}" style="font-size: 25px;">接收訂單</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/getAllOrder}" style="font-size: 25px;">訂單管理</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/restBackLogOut}" style="font-size: 25px;">登出</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<br/><br/>
+
+<div class="mainContent">
+    <div class="card">
+        <img th:src="@{${session.currentRestaurant.restPhoto}}" class="card-img-top" alt="...">
+        <div class="card-body">
+            <input id="cardTitle" class="card-title" th:value="${session.currentRestaurant.restName}" disabled/></br>
+            <label for="imageInput" class="btn btn-primary">更改封面</label>
+            <input type="file" id="imageInput" style="display: none;" name="restPhoto">
+            <a href="#" class="btn btn-primary" onclick="changeTitle()">更改名稱</a>
+            <button onclick="changeRestImage()" class="btn btn-primary" style="margin-left: 189px">送出</button>
+        </div>
+    </div>
+</div>
+
+<input type="text" id="editInput" class="edit-input" onblur="saveTitle()">
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+<script>
+    function changeTitle() {
+        var cardTitleInput = document.getElementById("cardTitle");
+        cardTitleInput.removeAttribute("disabled");
+    }
+
+    function saveTitle() {
+        // 取得card-title元素和editInput元素
+        var cardTitle = document.getElementById('cardTitle');
+        var editInput = document.getElementById('editInput');
+
+        // 將editInput的值設定為card-title的內容
+        cardTitle.textContent = editInput.value;
+
+        // 隱藏editInput，顯示card-title
+        cardTitle.style.display = 'inline-block';
+        editInput.style.display = 'none';
+    }
+
+    function changeRestImage() {
+        var imageInput = document.getElementById('imageInput');
+        const file = imageInput.files[0];
+        var restName = document.getElementById('cardTitle').value
+//      问题可能出在前端构建 FormData 对象的方式上。在你的代码中，你使用了 jQuery 选择器 $('#imageInput') 来获取文件输入框，但是你需要获取文件对象，而不是 jQuery 对象。
+//      应该使用原生 JavaScript 的 document.getElementById 来获取文件输入框，并从中获取文件对象。
+        const formData = new FormData();
+
+        if (imageInput) {
+            formData.append('image', file);
+            if (restName) {
+                formData.append('restName', restName);
+            }
+        } else {
+            if (restName) {
+                formData.append('restName', restName);
+            }
+        }
+
+
+        fetch('/changePhoto', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                alert(data);
+                window.location.href = 'http://localhost:8080/goToRest'
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+</html>

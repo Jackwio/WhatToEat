@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .navbar {
+            background-color: orange;
+            padding-top: 1px;
+            padding-bottom: 1px;
+        }
+
+        .navbar-text {
+            vertical-align: bottom;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: larger;
+        }
+
+        .btn {
+            background-color: orange;
+            color: black;
+        }
+
+        .btn:hover {
+            background-color: orange;
+            color: black;
+            font-weight: 700;
+            box-shadow: 0 4px 8px rgba(255, 166, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <button class="btn btn-light" type="button" data-bs-toggle="modal" data-bs-target="#myModal"><a
+                class="navbar-brand" href="#"><i class="bi bi-list" style="font-size: 30px;"></i></a>
+        </button>
+        <a class="navbar-brand" th:href="@{/goToAdmin}">
+            <h2>WhatToEat</h2>
+        </a>
+        <div id="navbarSupportedContent">
+            <span class="navbar-text">管理員您好!</span>
+        </div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
+            <li class="nav-item">
+                <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen" style="width:400px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <!-- 調整按鈕樣式 -->
+                                <div style="margin-bottom: 20px;"><a th:href="@{/checkAllRestaurant}"
+                                                                     style="font-size: 25px;">餐廳</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/checkAllMember}"
+                                                                     style="font-size: 25px;">會員</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/checkAllOrder}"
+                                                                     style="font-size: 25px;">歷史訂單</a>
+                                </div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/goToAddAdmin}"
+                                                                     style="font-size: 25px;">新增管理員</a>
+                                </div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/logoutAdmin}"
+                                                                     style="font-size: 25px;">登出</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+    </div>
+</nav>
+<br/><br/><br/>
+<div class="container text-center">
+    <span style="font-size: 50px;margin-left: 3px;">新增管理員</span><br/><br/><br/>
+    <div class="input-group flex-nowrap col-md-3 offset-md-3">
+        <span class="input-group-text">email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <input id="email" type="text" class="form-control" placeholder="請輸入email" style="max-width:40%">
+    </div>
+    <br/>
+    <div class="input-group flex-nowrap offset-md-3">
+        <span class="input-group-text">密碼&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <input id="password" type="text" class="form-control" placeholder="請輸入密碼" style="max-width:40%">
+    </div>
+    <br/>
+    <div class="input-group flex-nowrap offset-md-3">
+        <span class="input-group-text">確認密碼</span>
+        <input id="confirmPassword" type="text" class="form-control" placeholder="請輸入確認密碼" style="max-width:40%">
+    </div>
+    <br/>
+    <button class="btn btn-primary btn-lg" style="margin-left: 490px;" th:onclick="|addAdmin()|">新增</button>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    function addAdmin() {
+        var adminEmail = $('#email').val()
+        var password = $('#password').val()
+        var confirmPassword = $('#confirmPassword').val()
+
+        if(password!=confirmPassword){
+            alert("密碼和確認密碼不同")
+            return
+        }
+
+        $.get('/registerAdmin?adminEmail=' + adminEmail + '&password=' + password, function (data) {
+            alert(data);
+            window.location.href = 'http://localhost:8080/goToAdmin'
+        })
+    }
+</script>
+</body>
+</html>

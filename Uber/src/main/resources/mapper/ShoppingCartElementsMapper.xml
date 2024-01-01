@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.my.mapper.ShoppingCartElementsMapper">
+    <resultMap id="getAllCartItemMap" type="com.my.pojo.ShoppingCartElements">
+        <id property="cartItemId" column="cart_item_id"></id>
+        <result property="foodNum" column="food_num"></result>
+        <association property="foodId" javaType="com.my.pojo.Menu"
+                     select="com.my.mapper.MenuMapper.getMenuById" column="food_id">
+        </association>
+        <association property="cartId" column="cart_id">
+            <id property="cartId" column="cart_id"></id>
+        </association>
+    </resultMap>
+
+    <resultMap id="getCartItemMapById" type="com.my.pojo.ShoppingCartElements">
+        <association property="cartId" javaType="com.my.pojo.ShoppingCart">
+            <id property="cartId" column="cart_id"></id>
+        </association>
+        <association property="foodId" javaType="com.my.pojo.Menu">
+            <id property="menuFoodId" column="menu_food_id"></id>
+        </association>
+    </resultMap>
+
+    <insert id="addCartItem">
+        insert into tbl_shopping_cart_elements values(0,#{cartId.cartId},#{foodId.menuFoodId},#{foodNum})
+    </insert>
+
+    <update id="updateCartItem">
+        update tbl_shopping_cart_elements set food_num = #{cartItem.foodNum} where food_id=#{mId}
+    </update>
+
+    <select id="getAllCartItem" resultMap="getAllCartItemMap">
+        select * from tbl_shopping_cart_elements where cart_id=#{cId}
+    </select>
+
+    <select id="getCartItemByMid" resultMap="getCartItemMapById">
+        select * from tbl_shopping_cart_elements where food_id=#{mId}
+    </select>
+</mapper>

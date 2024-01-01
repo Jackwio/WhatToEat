@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        td,
+        th {
+            text-align: center;
+            padding: 12px;
+        }
+
+        .table-borderless {
+            border: none;
+        }
+
+        .table-dark th {
+            background-color: #343a40;
+            color: #fff;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .navbar {
+            background-color: orange;
+            padding-top: 1px;
+            padding-bottom: 1px;
+        }
+        .navbar-text {
+            vertical-align: bottom;
+            font-weight: 600;
+        }
+        h2 {
+            font-size: larger;
+            margin-left: 10px;
+        }
+        .chart-container {
+            max-width: 800px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column; /* Display charts vertically */
+            align-items: center; /* Center charts horizontally */
+        }
+        canvas {
+            width: 100%; /* Take up full width of the container */
+            height: auto; /* Maintain aspect ratio */
+            margin-bottom: 20px; /* Add margin between charts */
+        }
+        .navbar-brand {
+            margin-right: auto; /* Add this line to move "WhatToEat" to the left */
+        }
+        .btn {
+            background-color: orange; /* Replace "your-color" with the desired background color */
+        }
+        .modal-body a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .modal-body a:hover {
+            color: orange;
+            text-decoration: none;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+<nav class="navbar">
+    <div class="container-fluid">
+        <button class="btn btn-light" type="button" data-bs-toggle="modal" data-bs-target="#myModal"> <a
+                class="navbar-brand" href="#"><i class="bi bi-list" style="font-size: 30px;"></i></a>
+        </button>
+        <a class="navbar-brand" th:href="@{/goToRestBack}">
+            <h2>WhatToEat</h2>
+        </a>
+        <div id="navbarSupportedContent">
+            <span th:text="${session.currentRestaurant.restName}" class="navbar-text">永和豆漿大王您好!</span>
+        </div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
+            <li class="nav-item">
+                <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen" style="width:400px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel"></h4>
+                            </div>
+                            <div class="modal-body">
+                                <div style="margin-bottom: 20px;"><a th:href="@{/goToRestBack}" style="font-size: 25px;">首頁</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/goToRest}" style="font-size: 25px;">餐廳門市</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/goToMenuOfRest}" style="font-size: 25px;">菜單</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/getComment}" style="font-size: 25px;">評論</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/getOrderReceived}" style="font-size: 25px;">接收訂單</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/getAllOrder}" style="font-size: 25px;">訂單管理</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/restBackLogOut}" style="font-size: 25px;">登出</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <table class="table table-borderless">
+        <thead>
+        <h1>Order Management</h1>
+        <tr class="table-dark">
+            <th scope="col"><span style="color:orange">訂單編號</span></th>
+            <th scope="col"><span style="color:orange">日期</span></th>
+            <th scope="col"><span style="color:orange">購買商品</span></th>
+            <th scope="col"><span style="color:orange">狀態</span></th>
+            <th scope="col"><span style="color:orange">顧客名稱</span></th>
+            <th scope="col"><span style="color:orange">合計</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orderItems}">
+            <th scope="row" th:text="${order.orderId}"></th>
+            <td th:text="${order.orderDateTime}"></td>
+            <td>
+                <div th:each="item :${order.orderItem}">
+                    <span th:text="${item.foodId.menuFoodName+' * '+item.foodNum}"></span>
+                </div>
+            </td>
+            <td th:text="${order.restAccepted}"></td>
+            <td th:text="${order.memEmail.memName}"></td>
+            <td th:text="${order.orderTotal}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+</html>

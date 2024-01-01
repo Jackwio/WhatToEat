@@ -1,0 +1,2 @@
+#加載springboot3兼容druid的配置類
+com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure

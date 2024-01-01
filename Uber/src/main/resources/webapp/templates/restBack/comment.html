@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .rating {
+            border: none;
+            float: left;
+        }
+
+        .rating > input {
+            display: none;
+        }
+
+        .rating > label:before {
+            margin: 5px;
+            font-size: 1.25em;
+            font-family: FontAwesome;
+            display: inline-block;
+            content: "\f005";
+        }
+
+        .rating > .half:before {
+            content: "\f089";
+            position: absolute;
+        }
+
+        .rating > label {
+            color: #ddd;
+            float: right;
+        }
+
+        /***** CSS Magic to Highlight Stars on Hover *****/
+
+        .rating > input:checked ~ label, /* show gold star when clicked */
+        .rating:not(:checked) > label:hover, /* hover current star */
+        .rating:not(:checked) > label:hover ~ label {
+            color: #FFD700;
+        }
+
+        /* hover previous stars in list */
+
+        .rating > input:checked + label:hover, /* hover current star when changing rating */
+        .rating > input:checked ~ label:hover,
+        .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+        .rating > input:checked ~ label:hover ~ label {
+            color: #FFED85;
+        }
+
+        .navbar {
+            background-color: orange;
+            padding-top: 1px;
+            padding-bottom: 1px;
+        }
+
+        .navbar-text {
+            vertical-align: bottom;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: larger;
+        }
+
+        .btn {
+            background-color: orange;
+            color: black;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background-color: orange;
+            color: black;
+            font-weight: 700;
+            box-shadow: 0 4px 8px rgba(255, 166, 0, 0.7);
+        }
+        .modal-body a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .modal-body a:hover {
+            color: orange;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .card {
+            width: 300px;
+            margin-bottom: 10px; /* 增加底部留白 */
+        }
+
+        .row:not(:last-child) {
+            margin-bottom: 20px; /* 增加行與行之間的留白 */
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="container-fluid">
+        <button class="btn btn-light" type="button" data-bs-toggle="modal" data-bs-target="#myModal"> <a
+                class="navbar-brand" href="#"><i class="bi bi-list" style="font-size: 30px;"></i></a>
+        </button>
+        <a class="navbar-brand" th:href="@{/goToRestBack}">
+            <h2>WhatToEat</h2>
+        </a>
+        <div id="navbarSupportedContent">
+            <span th:text="${session.currentRestaurant.restName}" class="navbar-text">永和豆漿大王您好!</span>
+        </div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
+            <li class="nav-item">
+                <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen" style="width:400px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel"></h4>
+                            </div>
+                            <div class="modal-body">
+                                <div style="margin-bottom: 20px;"><a th:href="@{/goToRestBack}" style="font-size: 25px;">首頁</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/goToRest}" style="font-size: 25px;">餐廳門市</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/goToMenuOfRest}" style="font-size: 25px;">菜單</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/getComment}" style="font-size: 25px;">評論</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/getOrderReceived}" style="font-size: 25px;">接收訂單</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/getAllOrder}" style="font-size: 25px;">訂單管理</a></div>
+                                <div style="margin-bottom: 20px;"><a th:href="@{/restBackLogOut}" style="font-size: 25px;">登出</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="card text-bg-light mb-3" style="max-width: 18rem; margin-left: 10px;">
+    <div class="card-header">平均評分</div>
+    <div class="card-body">
+        <h5 class="card-title" th:text="${session.currentRestaurant.restRatings}">4.5</i></h5>
+<!--        <i class="bi bi-star-fill" style="color: rgb(255, 208, 0);"></i><i class="bi bi-star-fill" style="color: rgb(255, 208, 0);"></i><i class="bi bi-star-fill" style="color: rgb(255, 208, 0);"></i><i class="bi bi-star-fill" style="color: rgb(255, 208, 0);"></i><i class="bi bi-star-half" style="color: rgb(255, 208, 0);"></i>-->
+        <div id="rating-container"></div>
+    </div>
+</div>
+<table class="table table-striped table table-sm table caption-top table table-hover">
+    <caption class="caption"></br><h6>各會員評論</h6></caption></caption>
+    <thead>
+    <tr>
+        <th scope="col">日期</th>
+        <th scope="col">會員電話</th>
+        <th scope="col">會員名稱</th>
+        <th scope="col">會員email</th>
+        <th scope="col">評分</th>
+        <th scope="col">評論內容</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ratings : ${session.ratingsList}">
+        <th scope="row" th:text="${ratings.order.orderDateTime}">2023/12/15</th>
+        <td th:text="${ratings.order.memEmail.memPhoneNum}">03745340850</td>
+        <td th:text="${ratings.order.memEmail.memName}">Otto</td>
+        <td th:text="${ratings.memEmail}">Otto439@gmail.com</td>
+        <td th:text="${ratings.ratingsStar}"></td>
+        <td th:text="${ratings.ratingsContent}">讚</td>
+    </tr>
+    </tbody>
+</table>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+<script type="text/javascript">
+    function generateStars(rating) {
+        console.log(rating)
+        var starContainer = document.getElementById("rating-container");
+        starContainer.innerHTML = ''; // Clear existing content
+
+        var integerPart = Math.floor(rating);
+        var decimalPart = rating - integerPart;
+
+        for (var i = 0; i < integerPart; i++) {
+            starContainer.innerHTML += '<i class="bi bi-star-fill" style="color: rgb(255, 208, 0);"></i>';
+        }
+
+        // Adjust the proportion of the half star based on the decimal part
+        if (decimalPart > 0) {
+            starContainer.innerHTML += '<i class="bi bi-star-half" style="color: rgb(255, 208, 0); width: 50%;"></i>';
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        generateStars(parseFloat(document.querySelector('.card-title').textContent));
+    });
+</script>
+</body>
+</body>
+</html>

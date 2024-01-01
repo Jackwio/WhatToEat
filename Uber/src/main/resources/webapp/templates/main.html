@@ -1,0 +1,624 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+        /* 把div內全部垂直置中 */
+        .mainContent {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #moneyConstraint {
+            margin-left: 10px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .heartColor {
+            color: red;
+        }
+
+        /* 把原本的 background-color 改成橘色 */
+        .navbar-expand-lg {
+            background-color: orange;
+        }
+
+        /* 把 .btn-secondary 的 background-color 和 color 改成橘色 */
+        .btn-secondary {
+            background-color: orange;
+            color: black;
+            /* 如果需要調整文字顏色，可以根據需要修改 */
+        }
+
+        /* 把 .navbar-toggler-icon 的 background-color 改成橘色 */
+        .navbar-toggler-icon {
+            background-color: orange;
+        }
+
+        /* 把 .navbar-nav a 的文字顏色改成橘色 */
+        .navbar-nav a {
+            color: rgb(0, 0, 0);
+        }
+
+        /* 把 #moneyConstraint 和 #foodConstraint 下拉按鈕的文字顏色改成橘色 */
+        #moneyConstraint .btn,
+        #foodConstraint .btn {
+            color: rgb(0, 0, 0);
+        }
+
+        /* 把 .page-link 的文字顏色改成橘色 */
+        .page-link {
+            color: rgb(0, 0, 0);
+        }
+
+        /* 應用橘色樣式到 #contraint div 內的 .btn */
+        .nav-item > .btn {
+            background-color: orange;
+            color: black;
+            /* 如果需要調整文字顏色，可以根據需要修改 */
+        }
+
+        /* 把 search 按鈕的外框改成黑色 */
+        .btn-outline-success {
+            border-color: black;
+            color: black;
+            /* 如果需要調整文字顏色，可以根據需要修改 */
+        }
+
+        /* 修改底部分類的文字和底線顏色 */
+        .container.row span a {
+            color: black;
+            text-decoration: none;
+        }
+
+        /* 修改底部分類 hover 狀態的底線顏色 */
+        .container.row span a:hover {
+            text-decoration: underline;
+        }
+
+
+        .cartStyle:active,
+        .cartStyle:hover,
+        .cartStyle:visited {
+            background-color: #f8f9fa;
+            /* 將背景色設置為不點擊時的顏色，這裡使用淺灰色 (#f8f9fa) 作為示例 */
+        }
+
+        .imgSize {
+            width: 160px;
+            height: 120px;
+        }
+
+        .rating {
+            border: none;
+            float: left;
+        }
+
+        .rating > input { display: none; }
+        .rating > label:before {
+            margin: 5px;
+            font-size: 1.25em;
+            font-family: FontAwesome;
+            display: inline-block;
+            content: "\f005";
+        }
+
+        .rating > .half:before {
+            content: "\f089";
+            position: absolute;
+        }
+
+        .rating > label {
+            color: #ddd;
+            float: right;
+        }
+
+        /***** CSS Magic to Highlight Stars on Hover *****/
+
+        .rating > input:checked ~ label, /* show gold star when clicked */
+        .rating:not(:checked) > label:hover, /* hover current star */
+        .rating:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+
+        .rating > input:checked + label:hover, /* hover current star when changing rating */
+        .rating > input:checked ~ label:hover,
+        .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+        .rating > input:checked ~ label:hover ~ label { color: #FFED85;  }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rating {
+            margin-bottom: 20px;
+        }
+
+        #message-text {
+            width: 100%;
+        }
+        /* 調整 form 寬度 */
+        .form-control{
+            align-items: center;
+            width: 800px;
+        }
+        .form-label{
+            align-items: center;
+        }
+        #exampleModal .modal-body textarea {
+            width: 100%; /* Set the width as needed */
+            margin: 0 auto; /* Center-align the textarea */
+        }
+        body {
+            margin: 0;
+        }
+        .btn:hover{
+            background-color: orange;
+            font-weight: 700;
+            box-shadow: 0 4px 8px rgba(255, 166, 0, 0.7);
+        }
+
+        .modal-body a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .modal-body a:hover {
+            color: orange;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg" bg-body-tertiary>
+    <div class="container-fluid">
+        <button class="btn" style="background-color:orange" type="button" data-bs-toggle="modal"
+                data-bs-target="#myModal"><a
+                class="navbar-brand" href="#"><i class="bi bi-list" style="font-size: 30px;"></i></a>
+        </button>
+        <a class="navbar-brand" th:href="@{/main}">
+            <h2>WhatToEat</h2>
+        </a>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
+            <li class="nav-item">
+                <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen" style="width: 400px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td rowspan="2"><img th:if="${session.currentUser!=null}"
+                                                                 th:src="@{${session.currentUser.memPhoto}}"
+                                                                 style="width: 170px;height: 200px"
+                                                                 class="rounded">
+                                                <i th:if="${session.currentUser==null}" class="bi bi-person-circle"
+                                                   style="font-size: 6em"></i>
+                                            </td>
+                                            <td colspan="4"
+                                                style="font-size: 30px;vertical-align: middle; text-align: center;padding-top:25px"
+                                                th:if="${session.currentUser!=null}"
+                                                th:text="${session.currentUser.memName}">
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" th:if="${session.currentUser!=null}"
+                                                style="vertical-align: middle; text-align: center;padding-left:10px"><a
+                                                    th:href="@{/goToProfile}">管理帳戶</a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div style="margin-bottom: 20px;" th:if="${session.currentUser!=null}"><a th:href="@{/getMemberOrder}"
+                                                                                                          style="font-size: 25px;">訂單</a>
+                                </div>
+                                <div style="margin-bottom: 20px;" th:if="${session.currentUser!=null}"><a th:href="@{/showCollect}" style="font-size: 25px;">收藏</a></div>
+                                <div th:if="${session.currentUser!=null}" style="margin-bottom: 20px;"><a
+                                        th:href="@{/logOut}"
+                                        style="font-size: 25px;">登出</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <form class="d-flex col-md-3" role=" search" method="get" th:action="@{/lookRestaurant}">
+            <input type="hidden" name="action" value="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
+            <button class="btn btn-outline-success" type="submit" style="color: rgb(0, 0, 0);">Search</button>
+        </form>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end">
+                <li class="nav-item">
+                    <div class="dropdown" style="margin-right: 70px;">
+                        <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                data-bs-auto-close="outside" style="margin-left:5px">
+                            <h3 id="cartNumber" style="margin-top: 4px;"><i class="bi bi-cart"
+                                                                            th:fragment="cartNumber"></i><span
+                                    class="badge text-bg-danger" th:text="${session.cartItems.size()}"
+                                    th:fragment="cartNumber">5</span></h3>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" id="cartItemBlock">
+                            <li th:if="${session.cartItems==null?false:session.cartItems.size()==0}"
+                                th:fragment="cartItemBlock">
+                                目前尚未有商品
+                            </li>
+                            <li th:each="item : ${session.cartItems}" th:fragment="cartItemBlock">
+                                <a id="cartItemList" class="dropdown-item cartStyle" href="#">
+                                    <div class="d-flex justify-content-center">
+                                            <span th:text="${item.foodId.menuFoodName}"
+                                                  style="margin-top: 9px;color:blueviolet;">品名</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                            <button type="button" class="btn btn-light"
+                                                    data-operation="-1"
+                                                    th:data-menuid="${item.foodId.menuFoodId}"
+                                                    th:onclick="|editItem(this.getAttribute('data-operation'),this.getAttribute('data-menuid'),event)|">
+                                                <i
+                                                        class="bi bi-dash-circle-fill"
+                                                        style="color: black;font-size: 20px;"></i></button>
+                                            <button type="button" class="btn btn-light"><span
+                                                    style="color: black;" th:text="${item.foodNum}">1</span></button>
+                                            <button type="button" class="btn btn-light"><i
+                                                    class="bi bi-plus-circle-fill edit-item"
+                                                    style="color: black;font-size: 20px;" data-operation="1"
+                                                    th:data-menuid="${item.foodId.menuFoodId}"
+                                                    th:onclick="|editItem(this.getAttribute('data-operation'),this.getAttribute('data-menuid'),event)|"></i>
+                                            </button>
+                                        </div>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span style="margin-top: 9px;color:blueviolet;">總額為<span
+                                                th:text="${item.foodNum*item.foodId.menuFoodPrice}">100</span>
+                                            </span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <button style="margin-top: 9px;" class="btn btn-danger"
+                                                th:data-menuid="${item.foodId.menuFoodId}"
+                                                th:onclick="|deleteItem(this.getAttribute('data-menuid'))|">刪除
+                                        </button>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <!-- Add more items as needed -->
+                            <li class="text-center" style="background-color: orange;" th:fragment="cartItemBlock">
+                                <button type="button" class="btn"
+                                        th:data-cartItem="${session.cartItems.size()}" onclick="goToPay(this)">
+                                    前往付款
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item" th:if="${session.currentUser==null}">
+                    <a th:href="@{/loginUser}" class="nav-link" style="color: rgb(0, 0, 0);margin-top: 8px;">login</a>
+                </li>
+                <li class="nav-item" th:if="${session.currentUser==null}">
+                    <a class="nav-link" style="color: rgb(0, 0, 0);margin-top: 8px;" th:href="@{/registerUser}">sign
+                        up</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br/><br/>
+<div class="container row">
+    <div class="dropdown col-md-1" id="typeConstraint">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+            排序
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" th:onclick="|change('')|">排序</a></li>
+            <li><a class="dropdown-item" href="#" th:onclick="|change('評分')|">評分</a></li>
+        </ul>
+    </div>
+    <div class="dropdown col-md-1" id="moneyConstraint">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+            價錢
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" th:onclick="|changeMoney('價錢')|">價錢</a></li>
+            <li><a class="dropdown-item" href="#" th:onclick="|changeMoney('$')|">$</a></li>
+            <li><a class="dropdown-item" href="#" th:onclick="|changeMoney('$$')|">$$</a></li>
+            <li><a class="dropdown-item" href="#" th:onclick="|changeMoney('$$$')|">$$$</a></li>
+        </ul>
+    </div>
+    <div class="dropdown col-md-1" id="foodConstraint">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+            飲食限制
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#" th:onclick="|changeType('飲食限制')|">飲食限制</a></li>
+            <li><a class="dropdown-item" href="#" th:onclick="|changeType('蔬食')|">蔬食</a></li>
+            <li><a class="dropdown-item" href="#" th:onclick="|changeType('素食')|">素食</a></li>
+            <li><a class="dropdown-item" href="#" th:onclick="|changeType('無麩質')|">無麩質</a></li>
+        </ul>
+    </div>
+    <button class="btn btn-danger col-md-1 offset-md-1" style="margin-right: -30px" onclick="useTurntable()">
+        使用轉盤
+    </button>
+</div>
+
+<br/><br/>
+<div class="container row">
+    <span class="col-md-2"><a th:href="@{/lookRestaurant(menuType='中式')}">中式</a></span>
+    <span class="col-md-2"><a th:href="@{/lookRestaurant(menuType='西式')}">西式</a></span>
+    <span class="col-md-2"><a th:href="@{/lookRestaurant(menuType='韓式')}">韓式</a></span>
+    <span class="col-md-2"><a th:href="@{/lookRestaurant(menuType='美式')}">美式</a></span>
+    <span class="col-md-2"><a th:href="@{/lookRestaurant(menuType='點心')}">點心</a></span>
+</div>
+
+<br/><br/>
+<div class="container row mainContent text-center" style="display: flex;justify-content: flex-start">
+
+    <a id="restCard" th:each="rest : ${session.restaurants}" th:href="@{/lookMenu(restId=${rest.restId})}"
+       class="col-md-3">
+        <div class="card border-light">
+            <i th:if="${session.currentUser!=null && #lists.contains(session.favoriteRestIds, rest.restId)}" class="bi bi-heart-fill heartColor"
+               th:onclick="|collectRest(${rest.restId},event,${session.pageNumber})|"
+               th:id="${'heart'+rest.restId}"></i>
+            <i  th:if="${session.currentUser!=null}" th:unless="${#lists.contains(session.favoriteRestIds,rest.restId)}" class="bi bi-heart-fill"
+               th:onclick="|collectRest(${rest.restId},event,${session.pageNumber})|"
+               th:id="${'heart'+rest.restId}"></i>
+            <img th:src="@{${rest.restPhoto}}" class="card-img-top imgSize">
+            <div class="card-body">
+                <h5 class="card-title" style="float: left;" th:text="${rest.restName}">店名</h5>
+                <span class="badge text-bg-success" style="float: right;" th:text="${rest.restRatings}">4.8</span>
+            </div>
+        </div>
+    </a>
+</div>
+
+<br/><br/>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center pagination-lg">
+        <li class="page-item">
+            <button class="page-link" th:onclick="|changePage(${session.pageNumber}-1)|"
+                    th:disabled="${session.pageNumber==1}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </button>
+        </li>
+        <li class="page-item"><a class="page-link" href="#" th:if="${session.pageNumber<=session.maxPageNumber}"
+                                 th:text="${session.pageNumber}" th:onclick="|changePage(${session.pageNumber})|">1</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#" th:if="${session.pageNumber+1<=session.maxPageNumber}"
+                                 th:text="${session.pageNumber+1}"
+                                 th:onclick="|changePage(${session.pageNumber+1})|">2</a></li>
+        <li class="page-item"><a class="page-link" href="#" th:if="${session.pageNumber+2<=session.maxPageNumber}"
+                                 th:text="${session.pageNumber+2}"
+                                 th:onclick="|changePage(${session.pageNumber+2})|">3</a></li>
+        <li class="page-item">
+            <button class="page-link" th:onclick="|changePage(${session.pageNumber}+1)|"
+                    th:disabled="${session.pageNumber==session.maxPageNumber}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </button>
+        </li>
+    </ul>
+</nav>
+
+<div th:if="${session.currentCommentOrder!=null}" class="modal fade" id="commentModal" tabindex="-1"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="bi bi-check-circle-fill"></i>
+                <h1 class="modal-title fs-5" th:if="${session.currentCommentOrder!=null}"
+                    th:text="${'訂餐完成'+session.currentCommentOrder.get(0).orderDateTime}"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span>評分</span>
+                <fieldset class="rating" id="starRating">
+                    <input type="radio" id="star5" name="rating" value="5"/><label class="full" for="star5"
+                                                                                   title="Awesome - 5 stars"></label>
+                    <input type="radio" id="star4" name="rating" value="4"/><label class="full" for="star4"
+                                                                                   title="Pretty good - 4 stars"></label>
+                    <input type="radio" id="star3" name="rating" value="3"/><label class="full" for="star3"
+                                                                                   title="Meh - 3 stars"></label>
+                    <input type="radio" id="star2" name="rating" value="2"/><label class="full" for="star2"
+                                                                                   title="Kinda bad - 2 stars"></label>
+                    <input type="radio" id="star1" name="rating" value="1"/><label class="full" for="star1"
+                                                                                   title="Sucks big time - 1 star"></label>
+                </fieldset>
+                <div class="mb-3">
+                    <label for="commentContent" class="form-label">請留下評論：</label>
+                    <textarea id="commentContent" class="form-control" rows="3" name="comment" style="width:300px"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:if="${session.currentCommentOrder!=null}" th:data-order-id="${session.currentCommentOrder.get(0).orderId}" onclick="cancelComment(this)">取消
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" th:if="${session.currentCommentOrder!=null}" th:data-order-id="${session.currentCommentOrder.get(0).orderId}" onclick="goToComment(this)">確認評價
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+<script type="text/javascript">
+    function changePage(pageNumber) {
+        window.location.href = 'http://localhost:8080/lookRestaurant?pageNumber=' + pageNumber
+    }
+
+    // 呼叫時也需要傳event不然會無法接收到event
+    function collectRest(restId, event, pageNumber) {
+        event.stopPropagation()
+        event.preventDefault();
+        // if (currentUser == null) {
+        //     window.location.href = 'http://localhost:8080/collectRest?restId=' + restId + '&pageNumber=' + pageNumber
+        // } else {
+        var heartId = event.target.getAttribute("id")
+
+        var bool = $('#' + heartId).hasClass('heartColor')
+
+        if (heartId === 'heart' + restId) {
+            if (!bool) {
+                $('#' + heartId).addClass("heartColor")
+                window.location.href = 'http://localhost:8080/collectRest?restId=' + restId + '&pageNumber=' + pageNumber
+            } else {
+                $('#' + heartId).removeClass("heartColor")
+                window.location.href = 'http://localhost:8080/cancelCollectRest?restId=' + restId + '&pageNumber=' + pageNumber
+            }
+        }
+        // }
+    }
+
+    function editItem(change, mId, event) {
+        $.get("/editCart?mId=" + mId + "&change=" + change, function (data) {
+            $('#cartItemBlock').html(data)
+            $.get("/changeCartNumber", function (data) {
+                $('#cartNumber').html(data)
+            })
+        })
+    }
+
+    function goToPay(button) {
+        var quantity=button.getAttribute("data-cartItem")
+        if(parseInt(quantity)==0){
+            alert("請先加入商品到購物在進行付款")
+            return
+        }
+        window.location.href = 'http://localhost:8080/goToPay'
+    }
+
+    function change(value) {
+        window.location.href = 'http://localhost:8080/lookRestaurant?foodClass=' + value
+    }
+
+    function changeMoney(value) {
+        var price = 0
+        if (value === '$') {
+            price = 1
+        } else if (value === '$$') {
+            price = 2
+        } else if (value === '$$$') {
+            price = 3
+        }
+        window.location.href = 'http://localhost:8080/lookRestaurant?menuMoney=' + price
+    }
+
+    function changeType(value) {
+        if (value === '飲食限制') {
+            value = ''
+        }
+        window.location.href = 'http://localhost:8080/lookRestaurant?menuConstraint=' + value
+    }
+
+    function deleteItem(foodId) {
+        $.get("/deleteCart?mId=" + foodId, function (data) {
+            $('#cartItemBlock').html(data)
+            $.get("/changeCartNumber", function (data) {
+                $('#cartNumber').html(data)
+            })
+        })
+    }
+
+    function useTurntable() {
+        window.location.href = 'http://localhost:8080/useTurntable'
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the menuConstraint parameter from the URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var menuConstraintValue = urlParams.get('menuConstraint');
+        var tmenuMoney = urlParams.get('menuMoney');
+        var tFoodClass = urlParams.get('foodClass');
+        var menuSymbol;
+        if (tmenuMoney == 1) {
+            menuSymbol = '$'
+        } else if (tmenuMoney == 2) {
+            menuSymbol = '$$'
+        } else if (tmenuMoney == 3) {
+            menuSymbol = '$$$'
+        } else{
+            menuSymbol = '價錢'
+        }
+
+        // Check if the parameter is present and update the button text
+        if (menuConstraintValue) {
+            $('#foodConstraint button').text(menuConstraintValue);
+        }
+
+        if (tmenuMoney) {
+            $('#moneyConstraint button').text(menuSymbol);
+        }
+        if (tFoodClass) {
+            $('#typeConstraint button').text(tFoodClass);
+        }
+
+        const finishOrder = sessionStorage.getItem('finishOrder');
+        if (finishOrder === 'true') {
+            $('#commentModal').modal('show');
+        }
+
+    });
+
+    function goToMain() {
+        window.location.href = 'http://localhost:8080/lookRestaurant'
+    }
+
+    function goToComment(button) {
+        var orderId = button.getAttribute('data-order-id');
+        const comment = $('#commentContent').val()
+        const rating = document.querySelector('input[name="rating"]:checked').value;
+        window.location.href='http://localhost:8080/goToComment?comment='+comment+'&star='+rating+'&orderId='+orderId;
+    }
+
+    function cancelComment(button){
+        var orderId = button.getAttribute('data-order-id');
+        window.location.href='http://localhost:8080/cancelComment?orderId='+orderId;
+    }
+
+
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     const finishOrder = localStorage.getItem('finishOrder');
+    //     if (finishOrder === 'true') {
+    //         $('#exampleModal').modal('show');
+    //     }
+    // });
+
+</script>
+</body>
+
+</html>

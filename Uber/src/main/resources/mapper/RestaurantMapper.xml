@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.my.mapper.RestaurantMapper">
+    <update id="updateRest">
+        update tbl_restaurant set is_deleted = 0 where rest_id = #{restId}
+    </update>
+
+    <select id="getRestaurant" resultType="com.my.pojo.Restaurant">
+        SELECT * FROM tbl_restaurant where rest_id in (${restIds}) ORDER by rest_ratings DESC LIMIT #{pageNumber},4;
+    </select>
+    <select id="getAllRestaurant" resultType="com.my.pojo.Restaurant">
+        select * from tbl_restaurant
+    </select>
+</mapper>

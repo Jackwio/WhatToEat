@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.my.mapper.OrderMapper">
+    <resultMap id="getOrdersMap" type="com.my.pojo.Order">
+        <association property="memEmail" javaType="com.my.pojo.Member"
+                     select="com.my.mapper.MemberMapper.getMemberByMemEmail" column="mem_email"/>
+        <association property="menuFoodId" javaType="com.my.pojo.Menu"
+                     select="com.my.mapper.MenuMapper.getMenuById" column="menu_food_id"/>
+    </resultMap>
+    <select id="getOrders" resultMap="getOrdersMap">
+        select * from tbl_order where rest_id=#{restId}
+    </select>
+    <select id="getOrderByState" resultMap="getOrdersMap">
+        select * from tbl_order where rest_id=#{restId} AND rest_accepted=#{state}
+    </select>
+    <select id="geAllOrder" resultMap="getOrdersMap">
+        select * from tbl_order
+    </select>
+    <select id="getOrderByEamil" resultMap="getOrdersMap">
+        select * from tbl_order where mem_email=#{memEmail}
+    </select>
+    <select id="getOrderByOrderIdAndRestAccepted" resultMap="getOrdersMap">
+        select * from tbl_order where order_id=#{orderId} AND rest_accepted=#{restAccepted}
+    </select>
+    <select id="getOrdersByEmailAndRestAccepted" resultMap="getOrdersMap">
+        select * from tbl_order where mem_email=#{memEmail} AND rest_accepted=#{state}
+    </select>
+    <insert id="saveOrder" useGeneratedKeys="true" keyColumn="order_id">
+        insert into tbl_order(menu_food_id,order_food_num,order_total_price,order_date_time,mem_email,rest_id,rest_accepted,order_state) values(#{menuFoodId.menuFoodId},#{orderFoodNum}
+        ,#{orderTotalPrice},#{orderDateTime},#{memEmail.memEmail},#{restId},
+        #{restAccepted},#{orderState})
+    </insert>
+
+    <select id="getOrderByOrderState" resultMap="getOrdersMap">
+        select * from tbl_order where order_state=#{state}
+    </select>
+    <select id="getOrderByRestState" resultMap="getOrdersMap">
+        select * from tbl_order where rest_accepted=#{state}
+    </select>
+
+</mapper>

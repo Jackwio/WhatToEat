@@ -1,0 +1,82 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .mainContent {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+<br/><br/><br/><br/><br/><br/>
+<div class="container">
+    <h1 style="text-align: center">管理員登入</h1>
+    <br/><br/><br/>
+    <form class=" offset-md-4" action="#" onsubmit="return login(event)" method="post">
+        <input id="memEmail" type="email" class="form-control" placeholder="請輸入email" style="width:500px"
+               value="will1@gmail.com" name="memEmail" required>
+        <br/>
+        <input id="password" type="password" class="form-control" placeholder="請輸入密碼" style="width:500px"
+               value="will1" name="password" required>
+        <br/>
+        <input type="submit" class="btn btn-success offset-md-4" value="login" style="float:left;margin-left: 230px">
+    </form>
+    <br/>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+<script type="text/javascript">
+    function login(event) {
+        event.preventDefault()
+        var memEmail = $('#memEmail').val();
+        var password = $('#password').val();
+        const formData = new FormData();
+
+        formData.append('adminEmail', memEmail);
+        formData.append('password', password);
+
+
+        fetch('/loginAdmin', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                alert(data)
+                if(data==="管理員登入失敗"){
+                    window.location.href='http://localhost:8080/goLoginAdmin'
+                }else{
+                    window.location.href='http://localhost:8080/goToAdmin'
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+
+</html>
